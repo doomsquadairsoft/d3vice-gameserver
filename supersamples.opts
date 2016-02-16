@@ -1,0 +1,10 @@
+{
+  "baseUrl": "http://d3vice.doomsquadairsoft.com",
+  "reporter": "Spec",
+  "renderers": {
+    "html": {
+      "outputFolder": "docs",
+      "title": "D3vice Game Server API documentation"
+    }
+  }
+}
