@@ -13,7 +13,16 @@ var red = redis.createClient({host: redisHost, port: redisPort});
 
 var fakeData = {
   meta: {foo: "bar", version: 1},
-  gameState: [{foo: "bar"}, {fee: "burr"}]
+  gameState: [{event: "bar"}, {fee: "burr"}]
+}
+
+var fakeEvent = {
+  event: "somethingCool",
+  time: 1455699975941,
+  params: {
+    node: 3,
+    button: 1
+  }
 }
 
 // before(function(done) {
@@ -98,35 +107,66 @@ describe('Game Integration', function() {
     });
 
     describe('get', function() {
-      it('should return game state', function(done) {
+      it('should return an error if there is no game state', function(done) {
         game.state.get(function(err, s) {
-          assert.isNull(err);
-          assert.isJson(s, 'game state was not JSON');
+          assert.isDefined(err);
+          assert.match(err, /game state does not exist/);
+          assert.isNull(s);
           done();
+        })
+      });
+
+      it('should return game state when it exists', function(done) {
+        game.state.create(function(err, state) {
+          game.state.get(function(err, s) {
+            assert.isNull(err);
+            assert.isDefined(s);
+            assert.isDefined(s.meta);
+            assert.equal(s.meta.version, 1, 'game state version was off');
+            assert.isArray(s.gameState);
+            done();
+          });
         });
       });
     });
 
-
-
     describe('append', function() {
-      it('should respond with updated state', function(done) {
-        game.state.append({
-          event: "buttonPress",
-          time: 1455278924048,
-          params: {
-            node: 1,
-            button: 4
-          }
-        }, function(err, s) {
-          assert.isNull(err);
-          assert.isDefined(s.gameState);
-          assert.isEqual(s.gameState[s.gameState.length-1].time, 1455278924048);
+      it('should callback an error if state doesnt exist', function(done) {
+        game.state.append(fakeEvent, function(err, s) {
+          assert.isDefined(err);
+          assert.isNull(s);
           done();
         });
       });
 
-      it('should return error if receiving invalid game event object', function(done) {
+      it('should callback with updated state', function(done) {
+        game.state.create(function(err) {
+          game.state.append(fakeEvent, function(err, s) {
+            assert.isNull(err);
+            assert.isDefined(s.gameState);
+            assert.equal(s.gameState[s.gameState.length-1].time, fakeEvent.time);
+            done();
+          });
+        });
+      });
+
+      it('should save updated state to redis', function(done) {
+        game.state.create(function(err) {
+          game.state.append(fakeEvent, function(err, s) {
+            red.get('d3vice/game/active', function(err, reply) {
+              assert.isNull(err);
+              assert.isDefined(reply);
+              var s;
+              try { s = JSON.parse(reply); }
+              catch(e) {throw e}
+              assert.equal(s.gameState[s.gameState.length-1].time, fakeEvent.time);
+              done();
+            });
+          });
+        });
+      });
+
+      it('should callback with error if receiving invalid event object', function(done) {
         game.state.append({taco: "yes please"}, function(err, s) {
           assert.isDefined(err);
           done();

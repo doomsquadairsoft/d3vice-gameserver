@@ -77,8 +77,12 @@ var clear = function clear(cb) {
 var get = function get(cb) {
   red.GET('d3vice/game/active', function(err, reply) {
     if (err) return cb(err, null);
-    if (!reply) return cb(new Error('reply from Redis was null'));
-    return cb(null, reply);
+    if (!reply) return cb(new Error('game state does not exist'), null);
+    // parse stringified json reply
+    var r;
+    try { r = JSON.parse(reply); }
+    catch(e) { return cb(e, null); }
+    return cb(null, r);
   });
 }
 /**
@@ -91,21 +95,24 @@ var get = function get(cb) {
 /**
  * append history to the game state.
  *
- * @param {object} content - a js object containing a game event object
+ * @param {object} content - a game event object
  * @param {onAppendedCallback} cb
  */
 var append = function append(content, cb) {
-  if ((typeof content.event) === 'undefined') return cb(new Error('appended content did not have required event object'));
-  if ((typeof content.time) === 'undefined') return cb(new Error('appended content did not have required time number'));
-  if ((typeof content.params) === 'undefined') return cb(new Error('appended content did not have required params object'));
+  if ((typeof content.event) === 'undefined') return cb(new Error('appended content did not have required event object'), null);
+  if ((typeof content.time) === 'undefined') return cb(new Error('appended content did not have required time number'), null);
+  if ((typeof content.params) === 'undefined') return cb(new Error('appended content did not have required params object'), null);
 
-  get(function(err, reply) {
+  get(function(err, state) {
     if (err) return cb(err, null);
-    var s;
-    try { s = JSON.parse(reply); }
-    catch(e) { return cb(e, null); }
-    s.gameState.push(content);
-    return cb(null, s);
+    state.gameState.push(content);
+
+    var s = JSON.stringify(state);
+    red.SET('d3vice/game/active', s, function(err, reply) {
+      if (err) return cb(err, null);
+      if (reply !== 'OK') return cb(new Error('could not SET new event'));
+      return cb(null, state);
+    });
   });
 }
 /**
