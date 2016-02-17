@@ -4,18 +4,18 @@ var intel = require('./intel');
 var state = require('./state');
 
 
-function start() {
-
+function start(cb) {
+  return cb(new Error('@todo implement me'));
 }
 
 
 function stop() {
-  ipfs.name()
+  return cb(new Error('@todo implement me'));
 }
 
 
 function pause() {
-
+  return cb(new Error('@todo implement me'));
 }
 
 module.exports = {
