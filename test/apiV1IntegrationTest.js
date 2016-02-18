@@ -31,4 +31,37 @@ describe('/api/v1/game', function() {
       .end(done);
 
     });
-  });
+
+
+    /**
+       Returns network state, including network inventory
+      
+       Example:
+         {
+           "meta": {
+             "version": 1,
+             "type": "D3vice Network",
+             "home": "Doom Squad Airsoft Test Net",
+           },
+           "networkInventory": {
+             "nodes": [{
+             "name": "Vehicle Pyro 1",
+	     "features": 
+              
+     
+     */
+    it('returns JSON containing network state', function(done) {
+	request('http://localhost:3000/')
+	    .get('api/v1/network')
+	    .set('Accept', 'application/json')
+	    .expect(200)
+	    .expect('Content-Type', /json/)
+	    .expect(function(res) {
+		assert.isDefined(res.body.meta, 'json returned did not have expected meta key');
+		assert.equal(res.body.meta.version, 1, 'json returned was wrong version');
+		assert.equal(res.body.meta.type, 'Device Network', 'data returned was wrong type');
+	    })
+	    .end(done);
+      
+    });
+});
