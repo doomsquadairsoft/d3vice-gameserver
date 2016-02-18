@@ -21,7 +21,8 @@
   },
   "devDependencies": {
     "foreman": "^1.4.1",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "test": "mocha  --reporter supersamples ./test/",

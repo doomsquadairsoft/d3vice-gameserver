@@ -29,9 +29,10 @@ var create = function create(cb) {
 
     //console.log('game.state.create CHECK reply: ', reply);
     var state = {
-      "meta": {
-        "version": 1,
-        "type": "D3vice Game",
+      meta: {
+        version: 1,
+        type: "D3vice Game",
+        time: moment().valueOf()
       },
       "gameState": []
     };
@@ -68,6 +69,9 @@ var clear = function clear(cb) {
  * @callback {onGotStateCallback}
  * @param {error} err
  */
+
+
+
 
 /**
  * returns the state of the game
@@ -121,9 +125,56 @@ var append = function append(content, cb) {
  * @param {object} s - updated gameState js object
  */
 
+
+
+
+/**
+ * archive active game data/state to d3vice/game/{{date}}
+ *
+ * @param {onArchivedCallback} cb
+ */
+var archive = function archive(cb) {
+  // get the active game state
+  get(function(err, state) {
+    var invalidStateErr = new Error('could not archive because active game state was invalid');
+    if (err) return cb(err, null);
+    if (typeof state === 'undefined') return cb(invalidStateErr, null);
+    if (typeof state.meta === 'undefined') return cb(invalidStateErr, null);
+    if (typeof state.meta.time === 'undefined') return cb(invalidStateErr, null);
+
+    // get state's time and validate it
+    var time = state.meta.time;
+    if (typeof time !== 'number') {
+      console.log(time);
+      return cb(new Error('cannot archive non-number time'))
+    }
+
+    // copy the state to the new archive
+    red.SET('d3vice/game/'+time, state, function(err, reply) {
+      if (err) return cb(err, null);
+      if (reply !== 'OK'); return cb(new Error('Redis could not SET d3vice/game/'+time))
+
+      // peacefully delete the state
+      clear(function(err) {
+        if (err) return cb(err, null);
+
+        // call back the archived state
+        return cb(null, state);
+      });
+    });
+  });
+}
+/**
+ * @callback {onArchivedCallback}
+ * @param {error} err
+ * @param {object} archive - the state that was just archived
+ */
+
+
 module.exports = {
   get: get,
   append: append,
   clear: clear,
-  create: create
+  create: create,
+  archive: archive
 }

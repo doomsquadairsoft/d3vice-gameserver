@@ -3,6 +3,9 @@ var game = require('../game');
 var redis = require('redis');
 var nconf = require('nconf');
 var path = require('path');
+var moment = require('moment');
+var _ = require('underscore');
+
 
 nconf.file(path.join(__dirname, '..', 'config.json'));
 var redisHost = nconf.get('REDIS_HOST');
@@ -12,9 +15,11 @@ assert.isDefined(redisPort);
 var red = redis.createClient({host: redisHost, port: redisPort});
 
 var fakeData = {
-  meta: {foo: "bar", version: 1},
+  meta: {foo: "bar", version: 1, time: 1455699795941},
   gameState: [{event: "bar"}, {fee: "burr"}]
-}
+};
+console.log(typeof fakeData);
+
 
 var fakeEvent = {
   event: "somethingCool",
@@ -23,15 +28,7 @@ var fakeEvent = {
     node: 3,
     button: 1
   }
-}
-
-// before(function(done) {
-//   console.log('getting redis ready');
-//   red.on('ready', function(e) {
-//     console.log('redis is ready');
-//     done();
-//   });
-// });
+};
 
 
 describe('Game Integration', function() {
@@ -48,8 +45,8 @@ describe('Game Integration', function() {
     describe('create', function() {
 
       it('should error if state already exists', function(done) {
-        fakeData = JSON.stringify(fakeData);
-        red.set('d3vice/game/active', fakeData, function(err, reply) {
+        data = JSON.stringify(fakeData);
+        red.set('d3vice/game/active', data, function(err, reply) {
           assert.isNull(err);
           assert.equal(reply, 'OK');
 
@@ -66,33 +63,11 @@ describe('Game Integration', function() {
           assert.isNull(err);
           assert.isDefined(s);
           assert.isDefined(s.meta.version);
+          assert.isDefined(s.meta.time);
           assert.isArray(s.gameState);
           assert.equal(s.meta.version, 1, 'game state version was off');
           done();
         });
-        //
-        // fakeData = JSON.stringify(fakeData);
-        // console.log('inserting fake data %s', fakeData);
-        //
-        // red.set('d3vice/game/active', fakeData, function(err, reply) {
-        //
-        //
-        //   assert.isNull(err);
-        //   assert.equal(reply, 'OK');
-        //
-        //   red.get('d3vice/game/active', function(err, state) {
-        //     var s;
-        //     try {
-        //       s = JSON.parse(state);
-        //     }
-        //     catch(e) {
-        //       throw e;
-        //     }
-        //     assert.isNull(err);
-        //
-        //     done();
-        //   });
-        // });
       });
 
       it('should return fresh state', function(done) {
@@ -104,7 +79,7 @@ describe('Game Integration', function() {
           done();
         });
       });
-    });
+    }); // end of create
 
     describe('get', function() {
       it('should return an error if there is no game state', function(done) {
@@ -113,7 +88,7 @@ describe('Game Integration', function() {
           assert.match(err, /game state does not exist/);
           assert.isNull(s);
           done();
-        })
+        });
       });
 
       it('should return game state when it exists', function(done) {
@@ -128,7 +103,7 @@ describe('Game Integration', function() {
           });
         });
       });
-    });
+    }); // end of get
 
     describe('append', function() {
       it('should callback an error if state doesnt exist', function(done) {
@@ -158,7 +133,7 @@ describe('Game Integration', function() {
               assert.isDefined(reply);
               var s;
               try { s = JSON.parse(reply); }
-              catch(e) {throw e}
+              catch(e) { throw e; }
               assert.equal(s.gameState[s.gameState.length-1].time, fakeEvent.time);
               done();
             });
@@ -178,18 +153,70 @@ describe('Game Integration', function() {
 
 
     describe('archive', function() {
-
       var k;
-      it('should save game state to /d3vice/game/{{date}}, returning that key', function(done) {
-        game.state.archive(function(err, key) {
+      beforeEach(function(done) {
+        red.DEL('d3vice/game/1455711475936', function(err, reply) {
           assert.isNull(err);
-          assert.matches(key, /d3vice\/game\/\d+/);
-          k = key;
+          assert.isNumber(reply);
           done();
         });
       });
 
-      it('should save a pointer to the archive in the hash /d3vice/game/history', function(done) {
+      it('should error if the game state is invalid', function(done) {
+        red.SET('d3vice/game/active', JSON.stringify({}), function(err, reply) {
+          game.state.archive(function(err, key) {
+            assert.isDefined(err);
+            assert.match(err, /invalid/);
+            assert.isNull(key);
+            done();
+          });
+        });
+      });
+
+      it('should error if there is no state', function(done) {
+        game.state.archive(function(err, key) {
+          assert.isDefined(err);
+          assert.isNull(key);
+          done();
+        });
+      });
+
+      it('should error if the state time is invalid', function(done) {
+        var invalidTimeData = _.clone(fakeData);
+        invalidTimeData.meta.time = 'yesterday';
+        red.SET('d3vice/game/active', JSON.stringify(invalidTimeData), function(err, reply) {
+          assert.equal(reply, 'OK');
+          game.state.archive(function(err, key) {
+            assert.match(err, /non-number/);
+            done();
+          });
+        });
+      });
+
+      it('should call back with archive key', function(done) {
+        red.SET('d3vice/game/active', JSON.stringify(fakeData), function(err, reply) {
+          game.state.archive(function(err, key) {
+            assert.isNull(err);
+            assert.matches(key, /d3vice\/game\/\d+/);
+            k = key;
+            done();
+          });
+        });
+      });
+
+      it('should save game state in redis d3vice/game/{{date}}', function(done) {
+        red.SET('d3vice/game/active', JSON.stringify(fakeData), function(err, reply) {
+          game.state.archive(function(err, key) {
+            assert.isNull(err);
+            assert.matches(key, /d3vice\/game\/\d+/);
+            k = key;
+            done();
+          });
+        });
+      });
+
+      it('should save a pointer to the archive in the hash d3vice/game/history', function(done) {
+
         red.GET(k, function(err, reply) {
           assert.isNull(err);
           assert.isEqual(reply, k);
@@ -201,15 +228,27 @@ describe('Game Integration', function() {
 
 
 
-    // describe('clear', function() {
-    //   it('should clear state, returning null state', function(done) {
-    //     game.state.clear(function(err, state) {
-    //       assert.isNull(err);
-    //       assert.isNull(state, 'state object was not null');
-    //       done();
-    //     });
-    //   });
-    // }); // end of clear
+
+    describe('clear', function() {
+      it('should callback error if no state', function(done) {
+        red.SET('d3vice/game/active', JSON.stringify({}), function(err, reply) {
+          game.state.clear(function(err) {
+            assert.isDefined(err);
+            done();
+          });
+        });
+      });
+
+
+      it('should delete d3vice/game/active in redis', function(done) {
+        red.SET('d3vice/game/active', JSON.stringify({}), function(err, reply) {
+          game.state.clear(function(err) {
+            assert.isDefined(err);
+            done();
+          });
+        });
+      });
+    }); // end of clear
 
   }); // end of state... (wouldn't that be nice?)
 
