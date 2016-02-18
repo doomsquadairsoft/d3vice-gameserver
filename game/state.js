@@ -142,24 +142,33 @@ var archive = function archive(cb) {
     if (typeof state.meta === 'undefined') return cb(invalidStateErr, null);
     if (typeof state.meta.time === 'undefined') return cb(invalidStateErr, null);
 
-    // get state's time and validate it
+    // get state's time and validate it (expecting epoch in milliseconds)
     var time = state.meta.time;
-    if (typeof time !== 'number') {
-      console.log(time);
-      return cb(new Error('cannot archive non-number time'))
-    }
+    if (!moment(time, 'x', true).isValid()) return cb(new Error('time to archive was not epoch in milliseconds'));
+
+    // stringify the state
+    var key = 'd3vice/game/'+time;
+    var s;
+    try { s = JSON.stringify(state); }
+    catch(e) { return cb(err, null); }
 
     // copy the state to the new archive
-    red.SET('d3vice/game/'+time, state, function(err, reply) {
+    red.SET(key, s, function(err, reply) {
       if (err) return cb(err, null);
-      if (reply !== 'OK'); return cb(new Error('Redis could not SET d3vice/game/'+time))
+      if (reply !== "OK") return cb(new Error('Redis could not SET d3vice/game/'+time), null)
 
-      // peacefully delete the state
-      clear(function(err) {
+      // create a pointer to the archive
+      red.LPUSH('d3vice/game/history', key, function(err, reply) {
         if (err) return cb(err, null);
+        if (typeof reply !== 'number') return cb(new Error('redis could not RPUSH to d3vice/game/history'));
 
-        // call back the archived state
-        return cb(null, state);
+        // peacefully delete the state
+        clear(function(err) {
+          if (err) return cb(err, null);
+
+          // call back the archived state
+          return cb(null, key);
+        });
       });
     });
   });
