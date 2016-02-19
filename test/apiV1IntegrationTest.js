@@ -35,20 +35,9 @@ describe('/api/v1/game', function() {
 
     /**
        Returns network state, including network inventory
-      
-       Example:
-         {
-           "meta": {
-             "version": 1,
-             "type": "D3vice Network",
-             "home": "Doom Squad Airsoft Test Net",
-           },
-           "networkInventory": {
-             "nodes": [{
-             "name": "Vehicle Pyro 1",
-	     "features": 
-              
-     
+
+       https://github.com/doomsquadairsoft/d3vice/wiki/Network-State
+
      */
     it('returns JSON containing network state', function(done) {
 	request('http://localhost:3000/')
@@ -62,6 +51,6 @@ describe('/api/v1/game', function() {
 		assert.equal(res.body.meta.type, 'Device Network', 'data returned was wrong type');
 	    })
 	    .end(done);
-      
+
     });
 });

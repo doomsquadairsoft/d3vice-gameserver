@@ -1,19 +1,9 @@
-var redis = require('redis');
+
 var path  = require('path');
-var nconf = require('nconf');
+var red = require(path.join('..', 'database'));
 var moment = require('moment');
 
-nconf.file(path.join(__dirname, '..', 'config.json'));
-var redisHost = nconf.get('REDIS_HOST');
-var redisPort = nconf.get('REDIS_PORT');
 
-
-if ((typeof redisHost) === 'undefined') throw new Error('REDIS_HOST not defined in config.json');
-if ((typeof redisPort) === 'undefined') throw new Error('REDIS_PORT not defined in config.json');
-console.log(redisHost);
-console.log(redisPort);
-
-var red = redis.createClient({host: redisHost, port: redisPort});
 
 /**
  * creates state

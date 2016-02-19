@@ -1,8 +1,8 @@
 var assert = require('chai').assert;
-var game = require('../game');
+var path = require('path');
+var game = require(path.join('..', 'game'));
 var redis = require('redis');
 var nconf = require('nconf');
-var path = require('path');
 var moment = require('moment');
 
 
@@ -17,7 +17,6 @@ var fakeData = {
   meta: {foo: "bar", version: 1, time: 1455699795941},
   gameState: [{event: "bar"}, {fee: "burr"}]
 };
-console.log(typeof fakeData);
 
 
 var fakeEvent = {

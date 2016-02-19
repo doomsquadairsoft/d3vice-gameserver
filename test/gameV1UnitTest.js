@@ -1,5 +1,6 @@
+var path = require('path');
 var assert = require('chai').assert;
-var game = require('../game');
+var game = require(path.join('..', 'game'));
 var ipfs = require('ipfs-api');
 
 
