@@ -151,6 +151,13 @@ describe('Game Integration', function() {
 
 
     describe('archive', function() {
+      after(function(done) {
+        // clear out test data
+        red.DEL('d3vice/game/history');
+        red.DEL('d3vice/game/1455711475936');
+        done();
+      });
+
       beforeEach(function(done) {
         red.DEL('d3vice/game/1455711475936', function(err, reply) {
           assert.isNull(err);
