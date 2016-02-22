@@ -55,7 +55,7 @@ var create = function create(cb) {
 var read = function read(cb) {
   red.GET('d3vice/network/state', function(err, state) {
     if (err) return cb(err, null);
-    if (!state) return cb(new Error('no network state exists'), null);
+    if (!state) return cb(new Error('network state does not exist'), null);
     var s;
     try { s = JSON.parse(state) }
     catch(e) { return cb(e, null) }

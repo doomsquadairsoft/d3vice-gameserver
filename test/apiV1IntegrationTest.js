@@ -46,7 +46,7 @@ describe('/api/v1', function() {
          https://github.com/doomsquadairsoft/d3vice/wiki/Network-State
 
        */
-        xit('returns JSON containing network state', function(done) {
+        it('returns JSON containing network state', function(done) {
       request('http://localhost:3000/')
           .get('api/v1/network')
           .set('Accept', 'application/json')
@@ -55,7 +55,7 @@ describe('/api/v1', function() {
           .expect(function(res) {
       	assert.isDefined(res.body.meta, 'json returned did not have expected meta key');
       	assert.equal(res.body.meta.version, 1, 'json returned was wrong version');
-      	assert.equal(res.body.meta.type, 'Device Network', 'data returned was wrong type');
+      	assert.equal(res.body.meta.type, 'D3vice Network', 'data returned was wrong type');
           })
           .end(done);
 

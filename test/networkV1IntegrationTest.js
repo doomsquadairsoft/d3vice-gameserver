@@ -156,7 +156,7 @@ describe('Network Integration', function() {
         red.DEL('d3vice/network/state', function(err, reply) {
           assert.equal(reply, 1); // redis should say that it deleted `1` key
           network.state.update(fakeNodeManifest, function(err, state) {
-            assert.match(err, /exists/);
+            assert.match(err, /network state does not exist/);
             assert.isNull(state);
             done();
           });
