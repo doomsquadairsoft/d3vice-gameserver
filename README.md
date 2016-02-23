@@ -1,4 +1,4 @@
-# d3vice-gameserver [![Inline docs](http://inch-ci.org/github/doomsquadairsoft/d3vice-gameserver.svg?branch=master)](http://inch-ci.org/github/doomsquadairsoft/d3vice-gameserver)
+# d3vice-gameserver [![Build Status](https://travis-ci.org/doomsquadairsoft/d3vice-gameserver.svg?branch=master)](https://travis-ci.org/doomsquadairsoft/d3vice-gameserver) [![Inline docs](http://inch-ci.org/github/doomsquadairsoft/d3vice-gameserver.svg?branch=master)](http://inch-ci.org/github/doomsquadairsoft/d3vice-gameserver)
 Code which runs the game.
 
 * game logic handled by node

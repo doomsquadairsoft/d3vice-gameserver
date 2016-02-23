@@ -1,0 +1,7 @@
+language: node
+
+services:
+  - redis
+
+script:
+  - npm test
