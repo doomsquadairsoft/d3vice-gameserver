@@ -7,7 +7,7 @@ var freshNetworkState = {
     "meta": {
         "version": 1,
         "type": "D3vice Network",
-        "home": "Doom Squad Airsoft Test Net"
+        "name": "Doom Squad Airsoft Test Net"
     },
     "availableInventory": {
         "nodes": []
