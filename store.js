@@ -11,9 +11,25 @@ module.exports = {
     hardware: { link: 'hardware', isArray: true }
   },
   game: {
-    events: { link: 'event', isArray: true }
+    nodes: { link: 'node', isArray: true },
+    buttons: { link: 'hardware', isArray: true },
+    events: { link: 'event', isArray: true },
+    type: { link: 'game-type', inverse: 'games' },
+    time: { link: 'time' }
   },
-  event: {
+  time: {
+    start: { type: Date },
+    end: { type: Date },
+    limit: { type: Date }
+  },
+  'game-type': {
+    name: { type: String },
+    core: { type: Boolean },
+    games: { link: 'game', inverse: 'type', isArray: true },
+    requirements: { link: 'hardware', isArray: true },
+    optionals: { link: 'hardware', isArray: true }
+  },
+  'event': {
     time: { type: Date },
     type: { type: String },
     params: { type: Object }

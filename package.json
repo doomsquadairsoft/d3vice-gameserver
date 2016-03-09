@@ -1,0 +1,24 @@
+{
+  "name": "d3vice-gameserver",
+  "version": "1.0.0",
+  "description": "Code which runs the game.",
+  "main": "server.js",
+  "dependencies": {
+    "json-api-client": "^3.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doomsquadairsoft/d3vice-gameserver.git"
+  },
+  "author": "Chris Grimmett <chris@grimtech.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doomsquadairsoft/d3vice-gameserver/issues"
+  },
+  "homepage": "https://github.com/doomsquadairsoft/d3vice-gameserver#readme"
+}
