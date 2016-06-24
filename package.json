@@ -4,9 +4,13 @@
   "description": "Code which runs the game.",
   "main": "server.js",
   "dependencies": {
+    "amqplib": "^0.4.2",
+    "faker": "^3.1.0",
     "json-api-client": "^3.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"

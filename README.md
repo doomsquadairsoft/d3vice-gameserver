@@ -14,8 +14,6 @@ can be env vars or saved in `config.json`
 ```json
 {
   "D3VICE_"
-  "D3VICE_GAME_IPNS_ADDRESS": "",
-  "D3VICE_NETWORK_IPNS_ADDRESS": "",
   "REDIS_HOST": "",
   "REDIS_PORT": "",
   "REDIS_PASSWORD": "",
@@ -25,10 +23,6 @@ can be env vars or saved in `config.json`
 
 ## Notes/Brainstorming
 
-### Low power mode
-
-*DEPRECATED BECAUSE USING MQTT PUB/SUB* There could be a game event that tells all D3vice nodes to poll less often, to save power. Useful for when game is paused or game just ended, etc.
-
 
 
 ### esp8266 or other low-memory D3vice node
@@ -37,15 +31,15 @@ This is any D3vice on the network that can't run IPFS, and how it gets it's game
 
 * Starts up
 * acquires own IP address
-* Finds IP address of IPFS gateway/gameserver
-  * multicast request? Is there a packet that only IPFS responds to? (@todo research needed)
-  * for every address in range, GET `*/ipfs` looking for a recognized reply
-  * DNS? (probably not, since this is supposed to work in remote areas *and* in existing LANs)
+* Finds IP address of gameserver
+  * multicast request?
+  * DNS? (probably not, since d3vice-gameserver is supposed to work in remote areas *and* in existing LANs)
+  * UDP discovery method
 * Does RESTful request to gameserver that says, "I am here"
   * gameserver creates timestamped node discovery event in gameState
   * gameserver adds requesting device to "inventory", and shows it in GUI, but doesn't use it unless it was already in this game, and is just now reconnecting from some power failure, etc.
     * if there are two unique D3vice networks on the same LAN, the node would connect to the first one it found. An admin could use the GUI to change the network a node is paired with.
-* Polls gameserver IPNS gateway every n seconds, looking for instructions, and game events to react to.
+* Polls gameserver every n seconds, looking for instructions, and game events to react to.
 
 #### Bootstrap process
 
