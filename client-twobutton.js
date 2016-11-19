@@ -4,6 +4,9 @@
 var Input = require('./lib/mock-input');
 var Discoverer = require('./lib/discoverer');
 var Promise = require('bluebird');
+var Connection = require('./lib/socket-client');
+
+
 
 /**
  *  adapt the input to the socket
@@ -14,8 +17,8 @@ var Adapter = function Adapter(input, socket) {
     self.input = input || null;
     self.socket = socket || null;
     self.lastButton = '';
-    
 }
+
 
 
 /**
@@ -53,14 +56,23 @@ var waitForDiscoveryEvent = function waitForDiscoveryEvent(type) {
 }
 
 
-// wait for the discovery module to find the D3VICE server.
-// when found, we have the socket to work with.
-waitForDiscoveryEvent('found')
-    .then(function(wsc) {
-	console.log('  - got a good connection');
-	console.log(wsc);
-	adapter.connect(input, socket);
-    });
+
+// poll the discovery module every 1s until we get a list of discovered servers
+// use the list of discovered servers to find the suitable D3VICE server
+var pollDiscoTimer = setInterval(function() {
+    var discoList = disco.getDiscovered();
+    
+    return new Promise.mapSeries(discoList, function(server) {
+	// for each server in the list, return a promise of a connection.
+	// these fulfilled/rejected promises will be used to deterimine
+	// which connection to use for the game.
+	return new Connection(server.adddresses[0], server.port);
+    })
+
+
+}, 1000);
+
+
 
 
 
