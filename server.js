@@ -17,9 +17,11 @@ var http = new HttpServer();
 var ss = new SocketServer(http.httpServer);
 
 
+
 // create game instance which handles game state & game events
 var game = new Game().start();
 
 
+
 // advertise the game server's presense to the network via MDNS
-advertiser.begin();
+advertiser.begin(http.getPort());
