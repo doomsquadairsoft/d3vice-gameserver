@@ -5,50 +5,12 @@ var Input = require('./lib/mock-input');
 var Discoverer = require('./lib/discoverer');
 var Promise = require('bluebird');
 var Socket = require('./lib/socket-client');
+var Adapter = require('./lib/adapter');
+var debug = require('debug')('d3vice-gameserver:client-twobutton');
 
 
 
-/**
- *  adapt the input to the socket
- */
-var Adapter = function Adapter(input, socket) {
-    var self = this;
-    
-    self.input = input || null;
-    self.socket = socket || null;
-    self.lastButton = '';
-}
 
-
-
-/**
- * bridge the input with the socket
- */
-Adapter.prototype.connect = function connect(input, socket) {
-    self.input = input;
-    self.socket = socket;
-}
-
-
-Adapter.prototype.setSocket = function setSocket(socket) {
-    self.socket = socket;
-}
-
-/**
- * send data over the websocket
- * if no websocket connection is active, cache the latest button pressed
- */
-Adapter.prototype.send = function send(button) {
-    if (typeof button === 'undefined')
-	throw new Error('first param sent to send() must be a button name');
-
-    if (!self.socket)
-	self.lastButton = button;
-    else
-	//self.socket.send();
-	console.log(self.socket);
-	
-}
 
 
 var adapter = new Adapter();
@@ -75,7 +37,8 @@ var pollDiscoTimer = setTimeout(function() {
 	return new Socket(server.addresses[0], server.port)
 	    .connect()
 	    .catch(function(err) {
-		console.log(err);
+		debug('there was an error');
+		debug(err);
 	    })
     })
     
@@ -86,30 +49,34 @@ var pollDiscoTimer = setTimeout(function() {
 	    return false;
 	
 	if (typeof primus.id === 'undefined')
-	    return false
+	    return false;
 
-	return true
+	return true;
 	
     })
     
     
     .then(function(p) {
-	console.log(p.length);
+	debug('p.length=%s', p.length);
 	return p;
     })
 
     .mapSeries(function(primus) {
 	// got valid primus objects
 
+	// associate the primus object with the adapter
+	// the button presses call the adapter.
+	// if a socket is available to the adapter,
+	// the adapter uses the socket to send data to the server
+	adapter.setSocket(primus);
+
 	//console.log(primus);
 	primus.on('data', function(d) {
 	    primus.id(function(id) {
-		console.log('%s got data', id);
-		console.log(d);		
+		debug('%s got data', id);
+		debug(d);
 	    });
 	});
-
-
     })
 
 
@@ -131,10 +98,10 @@ var pollDiscoTimer = setTimeout(function() {
 input.on('button', function(b) {
 
     if (b === 'red')
-	adapter.send('red')
+	adapter.send({'button': 'red'})
 
     if (b === 'green')
-	adapter.send('green');
+	adapter.send('{'green');
 
     if (b === 'start')
 	adapter.send('start');

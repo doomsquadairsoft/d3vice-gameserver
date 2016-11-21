@@ -4,7 +4,7 @@ var Game = require('./lib/domination');
 var advertiser = require('./lib/advertiser');
 var HttpServer = require('./lib/http');
 var SocketServer = require('./lib/socket-server');
-
+var Adapter = require('lib/adapter');
 
 
 
@@ -20,6 +20,11 @@ var ss = new SocketServer(http.httpServer);
 
 // create game instance which handles game state & game events
 var game = new Game().start();
+
+
+
+// create a sensor input (via socket) adapter which sends data to the game
+var adapter = new Adapter(game, ss);
 
 
 
