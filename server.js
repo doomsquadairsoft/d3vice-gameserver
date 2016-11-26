@@ -4,7 +4,7 @@ var Game = require('./lib/domination');
 var advertiser = require('./lib/advertiser');
 var HttpServer = require('./lib/http');
 var SocketServer = require('./lib/socket-server');
-var Adapter = require('lib/adapter');
+var Adapter = require('./lib/adapter-server');
 
 
 
