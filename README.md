@@ -183,3 +183,19 @@ when teh gameserver starts a game
 ```
 
 * `ipfs add` the json file, and add the multihash returned from `ipfs add` to the ipns name for this game
+
+
+
+
+
+## Socket Adapter information
+
+On either side of the system, an Adapter class is used to bind game data to a socket. On the client side, the adapter is used adapt an input to a socket. On the server side, the adapter is used to adapt a socket to a game.
+
+
+
+```
+     Client                  Server
+input <-> socket        socket <-> game
+
+```
