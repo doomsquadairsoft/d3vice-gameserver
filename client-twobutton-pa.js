@@ -18,7 +18,7 @@ debug('accessing d3vice client adapter');
 debug(adapter);
 
 
-pammy.play('./sounds/domination.wav')
+pammy.play('./sounds/domination.ogg')
     .catch(function(e) {
 	debug('problem while playing soundfile');
 	debug(e);
