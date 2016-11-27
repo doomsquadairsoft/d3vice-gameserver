@@ -2,33 +2,17 @@
 
 
 var Input = require('./lib/mock-input');
-var Discoverer = require('./lib/discoverer');
-var Promise = require('bluebird');
-var Adapter = require('./lib/adapter-client');
+var Client = require('./lib/d3vice-client');
 var debug = require('debug')('d3vice-gameserver:client-twobutton');
 
 
-
-
-var adapter = new Adapter();
-var disco = new Discoverer();
 var input = new Input().begin();
+var client = new Client().start();
+var adapter = client.adapter;
 
 
-
-
-// poll the discovery module every few seconds
-// to find a D3VICE server
-disco.poll().getFoundSocket()
-    .then(function(primus) {
-	// associate the primus object with the adapter
-	// the button presses call the adapter.
-	// if a socket is available to the adapter,
-	// the adapter uses the socket to send data to the server
-	adapter.setSocket(primus);
-    });
-
-
+debug('accessing d3vice client adapter');
+debug(adapter);
 
 
 
