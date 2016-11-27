@@ -199,3 +199,11 @@ On either side of the system, an Adapter class is used to bind game data to a so
 input <-> socket        socket <-> game
 
 ```
+
+
+
+
+
+## Sounds
+
+domination.wav by Katarina Rose https://freesound.org/people/womb_affliction/sounds/330706/ (CC BY 3.0)
