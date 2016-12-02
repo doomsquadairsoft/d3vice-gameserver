@@ -12,6 +12,7 @@
     "faker": "^3.1.0",
     "guid": "0.0.12",
     "lodash": "^4.16.6",
+    "mdns-js": "^0.5.1",
     "next": "^1.1.2",
     "play-sound": "^1.1.1",
     "primus": "^6.0.5",
@@ -23,8 +24,7 @@
     "say": "^0.11.0",
     "ws": "^1.1.1"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "mocha",
     "start": "node server.js"
