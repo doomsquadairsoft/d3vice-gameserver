@@ -7,6 +7,42 @@ Code which runs the game.
 * api data served to client via express
 
 
+## Installation
+
+Install Python & other dependencies
+
+    apt-get install python build-essential git libavahi-compat-libdnssd-dev
+
+
+Clone this repo if you haven't already
+
+    git clone https://github.com/doomsquadairsoft/d3vice-gameserver
+    cd d3vice-gameserver
+
+
+Install node
+
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+    nvm install v4.6,2
+
+
+Install node dependencies
+
+
+    nvm install
+
+
+
+## Running the program
+
+
+
+
+
+
+
+
+
 ## Environment variables
 
 can be env vars or saved in `config.json`

@@ -34,3 +34,7 @@ node_modules
 
 # config file
 config.json
+
+
+# wav files
+sounds/*.wav
