@@ -4,7 +4,6 @@
   "description": "Code which runs the game.",
   "main": "server.js",
   "dependencies": {
-    "amqplib": "^0.4.2",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "chai": "^3.5.0",
@@ -12,7 +11,6 @@
     "express": "^4.14.0",
     "faker": "^3.1.0",
     "guid": "0.0.12",
-    "json-api-client": "^3.1.0",
     "lodash": "^4.16.6",
     "mdns": "^2.3.3",
     "next": "^1.1.2",
@@ -27,7 +25,6 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0"
   },
   "scripts": {
     "test": "mocha",
