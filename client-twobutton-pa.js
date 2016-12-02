@@ -18,13 +18,14 @@ debug('accessing d3vice client adapter');
 debug(adapter);
 
 
-pammy.play('./sounds/domination.ogg')
+pammy.play('./sounds/test.ogg')
     .catch(function(e) {
 	debug('problem while playing soundfile');
 	debug(e);
     })
     .then(function() {
 	debug('sound played!');
+	return pammy.say('domination');
     });
 
 
