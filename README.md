@@ -29,7 +29,7 @@ Install node
 Install node dependencies
 
 
-    nvm install
+    npm install
 
 
 
