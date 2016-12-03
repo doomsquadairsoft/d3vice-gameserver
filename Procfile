@@ -1,2 +1,2 @@
 gameserver: node server.js
-playerInput: node client-twobutton-pa.js
+playerInput: node client-twobutton.js

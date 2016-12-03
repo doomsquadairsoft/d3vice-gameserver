@@ -14,6 +14,7 @@
     "lodash": "^4.16.6",
     "mdns-js": "^0.5.1",
     "next": "^1.1.2",
+    "onoff": "^1.1.1",
     "play-sound": "^1.1.1",
     "primus": "^6.0.5",
     "react-icons": "^2.2.1",
