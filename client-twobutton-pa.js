@@ -1,7 +1,7 @@
 `use strict`
 
 
-var Input = require('./lib/mock-input');
+var Input = require('./lib/input');
 var Client = require('./lib/d3vice-client');
 var Pammy = require('./lib/public-address');
 var debug = require('debug')('d3vice-gameserver:client-twobutton-pa');
@@ -32,20 +32,25 @@ pammy.play('./sounds/test.ogg')
 
 input.on('button', function(b) {
 
-    if (b === 'red')
+    if (b === 'red') {
 	adapter.send({'button': 'red'})
+    }
 
-    if (b === 'green')
+    if (b === 'green') {
 	adapter.send({'button': 'green'});
+    }
 
-    if (b === 'start')
+    if (b === 'start') {
 	adapter.send({'button': 'start'});
+    }
 
-    if (b === 'stop')
+    if (b === 'stop') {
 	adapter.send({'button': 'stop'});
+    }
 
-    if (b === 'clear')
+    if (b === 'clear') {
 	adapter.send({'button': 'clear'});
+    }
 
 });
 

@@ -9,9 +9,9 @@ Code which runs the game.
 
 ## Installation
 
-Install Python & other dependencies
+Install system dependencies
 
-    apt-get install python build-essential git libavahi-compat-libdnssd-dev
+    apt-get install git festival festvox-kallpc16k
 
 
 Clone this repo if you haven't already
@@ -35,7 +35,27 @@ Install node dependencies
 
 ## Running the program
 
+There are multiple ways to do this, depending on how your hardware is configured. Run the server and the client on one device if you want, or run the server on one d3vice and the client on another. For example, here's how you can run the client ans server on one device, and manage the two separate node instances with `foreman`.
 
+First, create a `.env` file with any Environment variables you need. (advanced. not required.)
+
+Next, create a `Procfile` which details your desired setup. In this example, we have one device running the server and the client. The hardware configuration of this d3vice is a twobutton (red team/green team) box with neopixels and a 3.5mm speaker output.
+
+    // Procfile
+
+    gameserver: node server.js
+    playerInput: node client-twobutton-pa.js
+
+
+now simply start the processes using nf
+
+
+    ./node_modules/foreman/bin/nf.js start
+
+
+note: you can make the above line easier to call if you install foreman globally using `npm install -g foreman`. That would allow you to start the processes using:
+
+    nf start
 
 
 
@@ -238,6 +258,24 @@ input <-> socket        socket <-> game
 
 
 
+# Hardware
+
+## OrangePi One
+
+The original design target.
+
+### Setup steps
+
+  * Add a wifi dongle & configure to automatically join a D3VICE Wifi network.
+  * enable GPIO kernel module by adding `gpio-sunxi` to /etc/modules
+
+
+
+# Credits
+
+## Images
+
+https://forum.armbian.com/index.php/topic/759-tutorial-i2s-on-orange-pi-h3/
 
 
 ## Sounds
