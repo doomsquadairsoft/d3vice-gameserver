@@ -1,7 +1,7 @@
 `use strict`
 
 
-var Input = require('./lib/mock-input');
+var Input = require('./lib/input');
 var Client = require('./lib/d3vice-client');
 var debug = require('debug')('d3vice-gameserver:client-twobutton');
 
@@ -10,9 +10,6 @@ var input = new Input().begin();
 var client = new Client().start();
 var adapter = client.adapter;
 
-
-debug('accessing d3vice client adapter');
-debug(adapter);
 
 
 
