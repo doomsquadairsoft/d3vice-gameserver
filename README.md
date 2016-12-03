@@ -23,7 +23,7 @@ Clone this repo if you haven't already
 Install node
 
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-    nvm install v4.6,2
+    nvm install v4.6.2
 
 
 Install node dependencies
@@ -269,6 +269,11 @@ The original design target.
   * Add a wifi dongle & configure to automatically join a D3VICE Wifi network.
   * enable GPIO kernel module by adding `gpio-sunxi` to /etc/modules
 
+### Other notes
+
+Refer to https://www.kernel.org/doc/Documentation/gpio/sysfs.txt for info on controlling GPIO via sysfs/ npm epoll
+
+To find the GPIO number of a specific pin, run `tree /sys/class/gpio_sw` you will see the symlinks. example PC4 goes to gpio_sw.7 or GPIO#7
 
 
 # Credits
