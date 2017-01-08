@@ -79,6 +79,11 @@ can be env vars or saved in `config.json`
 
 ## Notes/Brainstorming
 
+### WS8211 (WizardSquares/Neopixel) info
+
+rpi-ws281x-native
+
+60mA needed per pixel.
 
 
 ### esp8266 or other low-memory D3vice node
@@ -275,6 +280,21 @@ Refer to https://www.kernel.org/doc/Documentation/gpio/sysfs.txt for info on con
 
 To find the GPIO number of a specific pin, run `tree /sys/class/gpio_sw` you will see the symlinks. example PC4 goes to gpio_sw.7 or GPIO#7
 
+
+#### DTS
+
+Device Table System stuff
+
+GPIO 23 is red button (pin 16)
+GPIO 24 is green butto (pin 18)
+
+An overlay file is used to configure the linux kernel, telling it what king of hardware is hooked up to the rpi or some shit. Here is the command to compile the overlay file:
+
+    dtc -@ -I dts -O dtb -o overlay.dtbo overlay.dts
+
+it's OK if the dts compiler warns about reg properties.
+
+dtb files are copied to /boot/overlays
 
 # Credits
 
