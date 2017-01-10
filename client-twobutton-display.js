@@ -1,3 +1,4 @@
+
 `use strict`
 
 
@@ -14,30 +15,30 @@ var client = new Client().start();
 var adapter = client.adapter;
 var display = new Display();
 
-console.log(adapter);
+debug(adapter);
 
 
 
 
 adapter.listen();
 adapter.on('heartbeat', function(inf) {
-    console.log('got heartbeat.');
-    console.log(inf);
+    debug('got heartbeat.');
+    debug(inf);
     
 });
 
 adapter.on('data', function(dta) {
-    //console.log('got data');
-    //console.log(dta);
+    //debug('got data');
+    //debug(dta);
     if (typeof dta.heartbeat !== 'undefined') {
 	var hb = dta.heartbeat;
 	var ct = hb.controlTeam;
 	var t = hb.timers[ct] || 0;
 	var ttw = hb.timeToWin;
 	
-	console.log('ct=%s, t=%s, ttw=%s', ct, t, ttw);
+	debug('controlTeam=%s, timers[controlTeam]=%s, timeToWin=%s, percentage', ct, t, ttw, ((t/ttw)*100));
 
-	display.setColor((ct === 1) ? 'green' : 'red', (ttw/t));
+	display.setColor((ct === 1) ? 'green' : 'red', ((t/ttw)*100));
 
 		// |  { heartbeat:
 		//      12:55:10 AM gameClient.1 |     { isRunning: true,
