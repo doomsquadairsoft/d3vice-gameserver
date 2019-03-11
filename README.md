@@ -1,6 +1,6 @@
 # d3vice-gameserver [![Build Status](https://travis-ci.org/doomsquadairsoft/d3vice-gameserver.svg?branch=master)](https://travis-ci.org/doomsquadairsoft/d3vice-gameserver) [![Inline docs](http://inch-ci.org/github/doomsquadairsoft/d3vice-gameserver.svg?branch=master)](http://inch-ci.org/github/doomsquadairsoft/d3vice-gameserver)
 
-**DEPRECATED** See https://github.com/doomsquadairsoft/controlpointer
+**DEPRECATED** Superceeded by Controlpointer https://github.com/doomsquadairsoft/controlpointer
 
 Code which runs the game.
 
